@@ -20,7 +20,7 @@ local motions = {
 local pending = ""
 
 function M.on_key(key)
-	-- detect text object combo
+	-- detect text-object combo (dap, ciw, etc)
 	if pending ~= "" then
 		local combo = pending .. key
 		if combo:match("^[dcya][ai][%a]$") then
@@ -31,15 +31,18 @@ function M.on_key(key)
 		pending = ""
 	end
 
+	-- operator start
 	if key:match("^[dcya]$") then
 		pending = key
 		return
 	end
 
+	-- simple motion
 	if motions[key] then
 		table.insert(M.log, key)
 	end
 
+	-- trim
 	if #M.log > M.max then
 		table.remove(M.log, 1)
 	end

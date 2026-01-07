@@ -1,8 +1,9 @@
 local tracker = require("motionflow.tracker")
 local ui = require("motionflow.ui")
 
-local M = {}
-M.enabled = false
+local M = {
+	enabled = false,
+}
 
 function M.toggle()
 	M.enabled = not M.enabled
@@ -12,6 +13,12 @@ function M.toggle()
 end
 
 function M.setup()
+	-- user command
+	vim.api.nvim_create_user_command("MotionFlow", function()
+		M.toggle()
+	end, {})
+
+	-- key listener
 	vim.on_key(function(key)
 		if not M.enabled then
 			return
@@ -19,10 +26,6 @@ function M.setup()
 		tracker.on_key(key)
 		ui.show("🧭 " .. tracker.flow())
 	end, M)
-
-	vim.api.nvim_create_user_command("MotionFlow", function()
-		M.toggle()
-	end, {})
 end
 
 return M
