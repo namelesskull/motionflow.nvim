@@ -5,6 +5,8 @@ local M = {
 	enabled = false,
 }
 
+local ns = vim.api.nvim_create_namespace("motionflow")
+
 function M.toggle()
 	M.enabled = not M.enabled
 	if not M.enabled then
@@ -13,19 +15,17 @@ function M.toggle()
 end
 
 function M.setup()
-	-- user command
 	vim.api.nvim_create_user_command("MotionFlow", function()
 		M.toggle()
 	end, {})
 
-	-- key listener
 	vim.on_key(function(key)
 		if not M.enabled then
 			return
 		end
 		tracker.on_key(key)
 		ui.show("🧭 " .. tracker.flow())
-	end, M)
+	end, ns)
 end
 
 return M
